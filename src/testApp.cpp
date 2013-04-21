@@ -2,10 +2,17 @@
 
 using namespace ofxCv;
 
+//-------------------------------------------------------------------
+
 void testApp::setup() {
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_SIMPLE); // changed this to simple
-	cam.initGrabber(640, 480); // changed screen size for phone (changed back; squeezed picture)
+	cam.initGrabber(640, 480); // note: how to change aspect ratio
+    
+    ofSetFrameRate(30);
+    
+    ofEnableAlphaBlending(); // to maintain target transparency
+    
 	
 	tracker.setup();
 	tracker.setRescale(.5);
@@ -13,7 +20,11 @@ void testApp::setup() {
     ofSetLineWidth(1);
     ofSetColor(255);
     ofNoFill();
+    
+    target.loadImage("target.png");
 }
+
+//-------------------------------------------------------------------
 
 void testApp::update() {
 	cam.update();
@@ -26,19 +37,33 @@ void testApp::update() {
     
     // calculate point at center of face using a bounding box
     // the bounding box is an ofRectangle object
+    // Note: tried to get centroid of Polyline in code commented below, didn't work
+    // faceCenter = faceOutline.getCentroid2D();
+
     faceRect = faceOutline.getBoundingBox();
     faceCenter = faceRect.getCenter();
+    // numbers to scale target to face size
+    targetW = faceRect.getWidth();
+    targetH = faceRect.getHeight();
+    
 
 
 }
+
+//-------------------------------------------------------------------
 
 void testApp::draw() {
 	cam.draw(0, 0);
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-	faceOutline.draw();
-    ofRect(faceRect);
+//	faceOutline.draw();
+//    ofRect(faceRect);
+//    ofCircle(faceCenter.x, faceCenter.y, 10);
+    target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
+    
     
 }
+
+//-------------------------------------------------------------------
 
 void testApp::keyPressed(int key) {
 	if(key == 'r') {

@@ -29,4 +29,6 @@ public:
     ofPoint faceCenter;
     
     ofImage target;
+    float targetW;
+    float targetH;
 };

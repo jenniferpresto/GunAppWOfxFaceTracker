@@ -1,3 +1,13 @@
+/*
+ iAmmo app
+ Jennifer G. Presto
+ Humor & Code
+ Parsons, Spring 2013
+ 
+ Face detection adapted from ofxFaceTracker empty example
+ 
+ */
+
 #include "testApp.h"
 
 using namespace ofxCv;
@@ -46,8 +56,6 @@ void testApp::update() {
     targetW = faceRect.getWidth();
     targetH = faceRect.getHeight();
     
-
-
 }
 
 //-------------------------------------------------------------------

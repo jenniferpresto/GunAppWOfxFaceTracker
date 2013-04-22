@@ -2,6 +2,7 @@
  iAmmo app
  Jennifer G. Presto
  Humor & Code
+ Parsons, Spring 2013
  
  Face detection adapted from ofxFaceTracker empty example
  
@@ -31,4 +32,6 @@ public:
     ofImage target;
     float targetW;
     float targetH;
+    
+    ofImage aimButton;
 };

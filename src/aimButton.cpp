@@ -10,22 +10,20 @@
 
 // ----------------------------------
 // constructor
-aimButton::aimButton(bool pushed) {
+aimButton::aimButton(bool _pushed) {
     xPos = 0;
     yPos = 0;
     w = 0;
     h = 0;
-    pushed = FALSE;
-    
+    pushed = _pushed;
 }
 
 // -----------------------------------
 void aimButton::display(){
-//    if(!pushed){
-//        
-//        
-//    }
-//    if(pushed){
-//        
-//    }
+    if(!pushed){
+        buttonOff.draw(xPos-w*0.5, yPos-h*0.5, w, h);
+    }
+    if(pushed){
+        buttonOn.draw(xPos-w*0.5, yPos-h*0.5, w, h);
+    }
 }

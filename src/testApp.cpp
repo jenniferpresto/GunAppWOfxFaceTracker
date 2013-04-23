@@ -36,6 +36,11 @@ void testApp::setup() {
     button.buttonOff.loadImage("aimButtonOpen.png");
     button.buttonOn.loadImage("aimButtonPushed.png");
     
+    button.xPos = ofGetWidth() * 0.5;
+    button.yPos = ofGetHeight() * 0.85;
+    button.w = 80;
+    button.h = 80;
+    
 }
 
 //-------------------------------------------------------------------
@@ -71,6 +76,8 @@ void testApp::draw() {
 //    ofRect(faceRect);
 //    ofCircle(faceCenter.x, faceCenter.y, 10);
     target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
+//    ofCircle(button.xPos, button.yPos, 10);
+    button.display();
 }
 
 //-------------------------------------------------------------------

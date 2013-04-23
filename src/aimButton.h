@@ -29,7 +29,8 @@ public:
     void display();
     
     // constructor
-    aimButton(bool pushed = false);
+    aimButton(bool _pushed = false);
+    bool pushed;
 };
 
 #endif /* defined(__GunApp__aimButton__) */

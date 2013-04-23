@@ -32,6 +32,10 @@ void testApp::setup() {
     ofNoFill();
     
     target.loadImage("target.png");
+    
+    button.buttonOff.loadImage("aimButtonOpen.png");
+    button.buttonOn.loadImage("aimButtonPushed.png");
+    
 }
 
 //-------------------------------------------------------------------
@@ -67,8 +71,6 @@ void testApp::draw() {
 //    ofRect(faceRect);
 //    ofCircle(faceCenter.x, faceCenter.y, 10);
     target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
-    
-    
 }
 
 //-------------------------------------------------------------------

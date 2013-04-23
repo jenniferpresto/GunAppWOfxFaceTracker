@@ -14,6 +14,7 @@
 #include "ofxCv.h"
 
 #include "ofxFaceTracker.h"
+#include "aimButton.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -33,5 +34,5 @@ public:
     float targetW;
     float targetH;
     
-    ofImage aimButton;
+    aimButton button;
 };

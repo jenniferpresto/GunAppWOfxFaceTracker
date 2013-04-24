@@ -33,13 +33,13 @@ void testApp::setup() {
     
     target.loadImage("target.png");
     
-    button.buttonOff.loadImage("aimButtonOpen.png");
-    button.buttonOn.loadImage("aimButtonPushed.png");
+    pushToAim.buttonOff.loadImage("aimButtonOpen.png");
+    pushToAim.buttonOn.loadImage("aimButtonPushed.png");
     
-    button.xPos = ofGetWidth() * 0.5;
-    button.yPos = ofGetHeight() * 0.85;
-    button.w = 80;
-    button.h = 80;
+    pushToAim.xPos = ofGetWidth() * 0.5;
+    pushToAim.yPos = ofGetHeight() * 0.85;
+    pushToAim.w = 50;
+    pushToAim.h = 50;
     
 }
 
@@ -76,8 +76,8 @@ void testApp::draw() {
 //    ofRect(faceRect);
 //    ofCircle(faceCenter.x, faceCenter.y, 10);
     target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
-//    ofCircle(button.xPos, button.yPos, 10);
-    button.display();
+//    ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+    pushToAim.display();
 }
 
 //-------------------------------------------------------------------
@@ -86,4 +86,13 @@ void testApp::keyPressed(int key) {
 	if(key == 'r') {
 		tracker.reset();
 	}
+}
+
+//--------------------------------------------------------------
+void testApp::mousePressed(int x, int y, int button){
+    if(x > pushToAim.xPos - pushToAim.w * 0.5 && x < pushToAim.xPos + pushToAim.w * 0.5 && y > pushToAim.yPos - pushToAim.h * 0.5 && y < pushToAim.yPos + pushToAim.h * 0.5){
+        pushToAim.pushed = true;
+    } else {
+        pushToAim.pushed = false;
+    }
 }

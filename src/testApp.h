@@ -22,6 +22,8 @@ public:
 	void update();
 	void draw();
 	void keyPressed(int key);
+    void mousePressed(int x, int y, int button);
+
 	
 	ofVideoGrabber cam;
 	ofxFaceTracker tracker;
@@ -34,5 +36,5 @@ public:
     float targetW;
     float targetH;
     
-    aimButton button;
+    aimButton pushToAim;
 };

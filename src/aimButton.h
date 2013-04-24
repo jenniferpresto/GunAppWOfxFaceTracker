@@ -15,12 +15,16 @@
 class aimButton{
 
 public:
-    
+
+    // constructor
+    aimButton(bool _pushed = false);
+
     // variables
     float xPos;
     float yPos;
     float w;
     float h;
+    bool pushed;
     
     ofImage buttonOff;
     ofImage buttonOn;
@@ -28,9 +32,6 @@ public:
     // method
     void display();
     
-    // constructor
-    aimButton(bool _pushed = false);
-    bool pushed;
 };
 
 #endif /* defined(__GunApp__aimButton__) */

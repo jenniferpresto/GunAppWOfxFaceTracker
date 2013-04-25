@@ -21,8 +21,7 @@ void testApp::setup() {
     
     ofSetFrameRate(30);
     
-    ofEnableAlphaBlending(); // to maintain target transparency
-    
+    ofEnableAlphaBlending(); // to maintain target transparency    
 	
 	tracker.setup();
 	tracker.setRescale(.5);
@@ -32,6 +31,18 @@ void testApp::setup() {
     ofNoFill();
     
     target.loadImage("target.png");
+    
+    pushTime = 0;
+    measuring = false;
+    
+    pushToAim.buttonOff.loadImage("aimButtonOpen.png");
+    pushToAim.buttonOn.loadImage("aimButtonPushed.png");
+    
+    pushToAim.xPos = ofGetWidth() * 0.5;
+    pushToAim.yPos = ofGetHeight() * 0.85;
+    pushToAim.w = 50;
+    pushToAim.h = 50;
+    
 }
 
 //-------------------------------------------------------------------
@@ -52,10 +63,13 @@ void testApp::update() {
 
     faceRect = faceOutline.getBoundingBox();
     faceCenter = faceRect.getCenter();
+
     // numbers to scale target to face size
     targetW = faceRect.getWidth();
     targetH = faceRect.getHeight();
-    
+   
+    if(!ofGetMousePressed()) pushToAim.pushed = false;
+
 }
 
 //-------------------------------------------------------------------
@@ -63,11 +77,15 @@ void testApp::update() {
 void testApp::draw() {
 	cam.draw(0, 0);
 	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-//	faceOutline.draw();
-//    ofRect(faceRect);
-//    ofCircle(faceCenter.x, faceCenter.y, 10);
+    // faceOutline.draw();
+    // ofRect(faceRect);
+    // ofCircle(faceCenter.x, faceCenter.y, 10);
     target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
+    // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+    pushToAim.display();
     
+    collectPoints();
+    measureAim();
     
 }
 
@@ -77,4 +95,60 @@ void testApp::keyPressed(int key) {
 	if(key == 'r') {
 		tracker.reset();
 	}
+}
+
+//--------------------------------------------------------------
+void testApp::mousePressed(int x, int y, int button){
+    if(x > pushToAim.xPos - pushToAim.w * 0.5 && x < pushToAim.xPos + pushToAim.w * 0.5 && y > pushToAim.yPos - pushToAim.h * 0.5 && y < pushToAim.yPos + pushToAim.h * 0.5){
+        pushToAim.pushed = true;
+        if(!measuring){
+            // start time marker so measure for 3 seconds
+            pushTime = ofGetElapsedTimeMillis();
+            measuring = true;
+        }
+        
+    } else {
+        pushToAim.pushed = false;
+    }
+}
+
+//--------------------------------------------------------------
+void testApp::collectPoints(){
+    if (cam.isFrameNew() && ofGetElapsedTimeMillis()-pushTime < 3000 && measuring){
+        
+        // for 3 seconds, get position of target and
+        // add x- and y-positions from each frame to each vector
+        targetX.push_back(faceCenter.x);
+        targetY.push_back(faceCenter.y);
+    }
+    
+    // stop measuring points after 3 seconds,
+    // set boolean to start calculating the average
+    if(ofGetElapsedTimeMillis()-pushTime > 3000 && measuring){
+        measuring = false;
+        calculating = true;
+    }
+}
+
+//--------------------------------------------------------------
+void testApp::measureAim(){
+    if(calculating){
+        int avgDist = 0;
+        for(int i=0; i<targetX.size()-1; i++){
+            avgDist += ofDist(targetX[i], targetY[i], targetX[i+1], targetY[i+1]);
+            cout << "calculating avgDist: " << avgDist << endl;
+        }
+        cout << "total distance = " << avgDist << endl;
+        cout << "number of points calculated = " << targetX.size() << endl;
+        
+        avgDist /= targetX.size()-1;
+        
+        // debugging
+        cout << "average distance = " << avgDist << endl;
+        
+        calculating = false;
+        
+        targetX.erase(targetX.begin(), targetX.end());
+        targetY.erase(targetY.begin(), targetY.end());
+    }
 }

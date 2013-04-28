@@ -37,10 +37,15 @@ public:
     ofRectangle faceRect;
     ofPoint faceCenter;
     
-    // variables controlling on-screen target
+    // variables controlling on-screen target and bullets
     ofImage target;
+    ofImage bullet;
+    vector<ofImage> magazine;
     float targetW;
     float targetH;
+    
+    // variable controlling state of app
+    int appState;
     
     // button to push to start measurement
     aimButton pushToAim;
@@ -53,4 +58,6 @@ public:
     int pushTime; // time button is pushed
     vector<float> targetX; // all target x-positions during the measured time
     vector<float> targetY; // all target y-positions during the measured time
+    int numBullets;
+    string recommendation;
 };

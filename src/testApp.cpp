@@ -8,7 +8,8 @@
  then suggests how many bullets you should have in
  your magazine to make sure you can hit your mark.
  
- Face detection adapted from ofxFaceTracker empty example
+ Face detection adapted from ofxFaceTracker empty example.
+ ofxCenteredTrueTypeFont subclass is by armadillu, from oF addons.
  
  */
 
@@ -37,6 +38,9 @@ void testApp::setup() {
     ofNoFill();
     
     target.loadImage("target.png");
+    bullet.loadImage("bullet.png");
+    
+    appState = 1;
     
     pushTime = 0;
     measuring = false;
@@ -81,25 +85,36 @@ void testApp::update() {
 //-------------------------------------------------------------------
 
 void testApp::draw() {
-	cam.draw(0, 0);
-    // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-    pushToAim.display();
-    if(!measuring){
-        // faceOutline.draw();
-        ofRect(faceRect);
-        // ofCircle(faceCenter.x, faceCenter.y, 10);
-        helvetica.drawStringCentered("Push the button.", ofGetWidth()*0.5, 10);
-        helvetica.drawStringCentered("The steadiness of your aim will", ofGetWidth()*0.5, 30);
-        helvetica.drawStringCentered("be measured for three seconds.", ofGetWidth()*0.5, 50);
+    // appState 1: Measuring shakiness of aim
+    if(appState == 1){
+        cam.draw(0, 0);
+        // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
+        pushToAim.display();
+        if(!measuring){
+            // faceOutline.draw();
+            ofRect(faceRect);
+            // ofCircle(faceCenter.x, faceCenter.y, 10);
+            helvetica.drawStringCentered("Push the button.", ofGetWidth()*0.5, 10);
+            helvetica.drawStringCentered("The steadiness of your aim will", ofGetWidth()*0.5, 30);
+            helvetica.drawStringCentered("be measured for three seconds.", ofGetWidth()*0.5, 50);
+            
+        }
         
+        if(measuring){
+            target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
+            // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+        }
+        collectPoints();
+        measureAim();
     }
     
-    if(measuring){
-        target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
-        // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+    
+    // appState 2: reporting results
+    if(appState == 2){
+        recommendation = "Bullets recommended: " + ofToString(numBullets);
+        helvetica.drawStringCentered(recommendation, ofGetWidth() * 0.5, 50);
+        helvetica.drawStringCentered("Click anywhere to test again:", ofGetWidth() * 0.5, 80);
     }
-    collectPoints();
-    measureAim();
 }
 
 //-------------------------------------------------------------------
@@ -112,16 +127,22 @@ void testApp::keyPressed(int key) {
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
-    if(x > pushToAim.xPos - pushToAim.w * 0.5 && x < pushToAim.xPos + pushToAim.w * 0.5 && y > pushToAim.yPos - pushToAim.h * 0.5 && y < pushToAim.yPos + pushToAim.h * 0.5){
-        pushToAim.pushed = true;
-        if(!measuring){
-            // start time marker so measure for 3 seconds
-            pushTime = ofGetElapsedTimeMillis();
-            measuring = true;
+    if (appState == 1){
+        if(x > pushToAim.xPos - pushToAim.w * 0.5 && x < pushToAim.xPos + pushToAim.w * 0.5 && y > pushToAim.yPos - pushToAim.h * 0.5 && y < pushToAim.yPos + pushToAim.h * 0.5){
+            pushToAim.pushed = true;
+            if(!measuring){
+                // start time marker so measure for 3 seconds
+                pushTime = ofGetElapsedTimeMillis();
+                measuring = true;
+            }
+            
+        } else {
+            pushToAim.pushed = false;
         }
-        
-    } else {
-        pushToAim.pushed = false;
+    }
+    
+    if(appState == 2){
+        appState = 1;
     }
 }
 
@@ -146,7 +167,7 @@ void testApp::collectPoints(){
 //--------------------------------------------------------------
 void testApp::measureAim(){
     if(calculating){
-        int avgDist = 0;
+        float avgDist = 0;
         for(int i=0; i<targetX.size()-1; i++){
             avgDist += ofDist(targetX[i], targetY[i], targetX[i+1], targetY[i+1]);
             cout << "calculating avgDist: " << avgDist << endl;
@@ -156,12 +177,17 @@ void testApp::measureAim(){
         
         avgDist /= targetX.size()-1;
         
+        numBullets = (int)MAX(1, avgDist); // make sure it recommends at least one bullet
+        
         // debugging
         cout << "average distance = " << avgDist << endl;
+        cout << "number of recommended bullets = " << numBullets << endl;
         
         calculating = false;
         
         targetX.erase(targetX.begin(), targetX.end());
         targetY.erase(targetY.begin(), targetY.end());
+        
+        appState = 2;
     }
 }

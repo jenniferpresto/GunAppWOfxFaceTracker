@@ -210,6 +210,7 @@
 		920399DB16EEC2FC0051BFDD /* ofxFaceTracker.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ofxFaceTracker.cpp; sourceTree = "<group>"; };
 		920399DC16EEC2FC0051BFDD /* ofxFaceTracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFaceTracker.h; sourceTree = "<group>"; };
 		920399DD16EEC2FC0051BFDD /* ofxFaceTrackerThreaded.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ofxFaceTrackerThreaded.h; sourceTree = "<group>"; };
+		925D63B7172D7A9500B2D45C /* ofxCenteredTrueTypeFont.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ofxCenteredTrueTypeFont.h; sourceTree = "<group>"; };
 		927407EC17263EEA007B310B /* aimButton.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = aimButton.cpp; sourceTree = "<group>"; };
 		927407ED17263EEA007B310B /* aimButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = aimButton.h; sourceTree = "<group>"; };
 		BBAB23BE13894E4700AA2426 /* GLUT.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLUT.framework; path = ../../../libs/glut/lib/osx/GLUT.framework; sourceTree = "<group>"; };
@@ -740,6 +741,7 @@
 				E4B69E1F0A3A1BDC003C02F2 /* testApp.h */,
 				927407EC17263EEA007B310B /* aimButton.cpp */,
 				927407ED17263EEA007B310B /* aimButton.h */,
+				925D63B7172D7A9500B2D45C /* ofxCenteredTrueTypeFont.h */,
 			);
 			path = src;
 			sourceTree = SOURCE_ROOT;

@@ -15,6 +15,7 @@
 
 #include "ofxFaceTracker.h"
 #include "aimButton.h"
+#include "ofxCenteredTrueTypeFont.h"
 
 class testApp : public ofBaseApp {
 public:
@@ -23,6 +24,9 @@ public:
 	void draw();
 	void keyPressed(int key);
     void mousePressed(int x, int y, int button);
+    
+    // font
+    ofxCenteredTrueTypeFont helvetica;
 
 	// variables for cam and faceTracker
 	ofVideoGrabber cam;

@@ -4,6 +4,10 @@
  Humor & Code
  Parsons, Spring 2013
  
+ Application measures the steadiness of your aim,
+ then suggests how many bullets you should have in
+ your magazine to make sure you can hit your mark.
+ 
  Face detection adapted from ofxFaceTracker empty example
  
  */
@@ -21,7 +25,9 @@ void testApp::setup() {
     
     ofSetFrameRate(30);
     
-    ofEnableAlphaBlending(); // to maintain target transparency    
+    ofEnableAlphaBlending(); // to maintain target transparency
+    
+    helvetica.loadFont("helvetica.otf", 12);
 	
 	tracker.setup();
 	tracker.setRescale(.5);
@@ -52,7 +58,7 @@ void testApp::update() {
 	if(cam.isFrameNew()) {
 		tracker.update(toCv(cam));
 	}
-
+    
     // declared variable in header file (unlike example)
 	faceOutline = tracker.getImageFeature(ofxFaceTracker::FACE_OUTLINE);
     
@@ -60,33 +66,40 @@ void testApp::update() {
     // the bounding box is an ofRectangle object
     // Note: tried to get centroid of Polyline in code commented below, didn't work
     // faceCenter = faceOutline.getCentroid2D();
-
+    
     faceRect = faceOutline.getBoundingBox();
     faceCenter = faceRect.getCenter();
-
+    
     // numbers to scale target to face size
     targetW = faceRect.getWidth();
     targetH = faceRect.getHeight();
-   
+    
     if(!ofGetMousePressed()) pushToAim.pushed = false;
-
+    
 }
 
 //-------------------------------------------------------------------
 
 void testApp::draw() {
 	cam.draw(0, 0);
-	ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
-    // faceOutline.draw();
-    // ofRect(faceRect);
-    // ofCircle(faceCenter.x, faceCenter.y, 10);
-    target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
-    // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+    // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
     pushToAim.display();
+    if(!measuring){
+        // faceOutline.draw();
+        ofRect(faceRect);
+        // ofCircle(faceCenter.x, faceCenter.y, 10);
+        helvetica.drawStringCentered("Push the button.", ofGetWidth()*0.5, 10);
+        helvetica.drawStringCentered("The steadiness of your aim will", ofGetWidth()*0.5, 30);
+        helvetica.drawStringCentered("be measured for three seconds.", ofGetWidth()*0.5, 50);
+        
+    }
     
+    if(measuring){
+        target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
+        // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+    }
     collectPoints();
     measureAim();
-    
 }
 
 //-------------------------------------------------------------------

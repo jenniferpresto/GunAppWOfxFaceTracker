@@ -44,6 +44,7 @@ void testApp::setup() {
     
     pushTime = 0;
     measuring = false;
+    firstMeasure = true;
     
     pushToAim.buttonOff.loadImage("aimButtonOpen.png");
     pushToAim.buttonOn.loadImage("aimButtonPushed.png");
@@ -114,6 +115,16 @@ void testApp::draw() {
         recommendation = "Bullets recommended: " + ofToString(numBullets);
         helvetica.drawStringCentered(recommendation, ofGetWidth() * 0.5, 50);
         helvetica.drawStringCentered("Click anywhere to test again:", ofGetWidth() * 0.5, 80);
+        if(firstMeasure){
+            for (int i = 0; i < numBullets; i++){
+                magazine.push_back(bullet);
+                firstMeasure = false;
+            }
+        }
+        
+        for (int i = 0; i < magazine.size(); i++){
+            magazine[i].draw(ofGetWidth() - 50, ofGetHeight() - 18 - (i * 18));
+        }
     }
 }
 
@@ -142,6 +153,8 @@ void testApp::mousePressed(int x, int y, int button){
     }
     
     if(appState == 2){
+        magazine.erase(magazine.begin(), magazine.end());
+        firstMeasure = true;
         appState = 1;
     }
 }

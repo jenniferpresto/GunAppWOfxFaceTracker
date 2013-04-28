@@ -60,4 +60,5 @@ public:
     vector<float> targetY; // all target y-positions during the measured time
     int numBullets;
     string recommendation;
+    bool firstMeasure;
 };

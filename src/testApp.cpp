@@ -86,9 +86,9 @@ void testApp::update() {
 //-------------------------------------------------------------------
 
 void testApp::draw() {
+    cam.draw(0,0);
     // appState 1: Measuring shakiness of aim
     if(appState == 1){
-        cam.draw(0, 0);
         // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
         pushToAim.display();
         if(!measuring){
@@ -123,7 +123,30 @@ void testApp::draw() {
         }
         
         for (int i = 0; i < magazine.size(); i++){
-            magazine[i].draw(ofGetWidth() - 50, ofGetHeight() - 18 - (i * 18));
+            if(i<5){
+                magazine[i].draw(ofGetWidth() - 50, ofGetHeight() - 18 - (i * 18));
+            }
+            if(i >= 5 && i < 10){
+                magazine[i].draw(ofGetWidth() - 100, ofGetHeight() - 18 - ((i-5) * 18));
+            }
+            if(i >= 10 && i < 15){
+                magazine[i].draw(ofGetWidth() - 150, ofGetHeight() - 18 - ((i-10) * 18));
+            }
+            if(i >= 15 && i < 20){
+                magazine[i].draw(ofGetWidth() - 200, ofGetHeight() - 18 - ((i-15) * 18));
+            }
+            if(i >= 20 && i < 25){
+                magazine[i].draw(ofGetWidth() - 250, ofGetHeight() - 18 - ((i-20) * 18));
+            }
+            if(i >= 25 && i < 30){
+                magazine[i].draw(ofGetWidth() - 300, ofGetHeight() - 18 - ((i-25) * 18));
+            }
+            if(i >= 30 && i < 35){
+                magazine[i].draw(ofGetWidth() - 350, ofGetHeight() - 18 - ((i-30) * 18));
+            }
+            if(i >= 35){
+                magazine[i].draw(ofGetWidth() - 400, ofGetHeight() - 18 - ((i-35) * 18));
+            }
         }
     }
 }

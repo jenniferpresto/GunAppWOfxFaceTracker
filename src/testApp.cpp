@@ -8,8 +8,13 @@
  then suggests how many bullets you should have in
  your magazine to make sure you can hit your mark.
  
- Face detection adapted from ofxFaceTracker empty example.
- ofxCenteredTrueTypeFont subclass is by armadillu, from oF addons.
+ Face detection adapted from ofxFaceTracker empty example,
+ available here:
+ https://github.com/kylemcdonald/ofxFaceTracker
+ 
+ ofxCenteredTrueTypeFont subclass is by armadillu, from oF addons,
+ available here:
+ https://github.com/armadillu/ofxCenteredTrueTypeFont
  
  */
 
@@ -22,7 +27,7 @@ using namespace ofxCv;
 void testApp::setup() {
 	ofSetVerticalSync(true);
 	ofSetDrawBitmapMode(OF_BITMAPMODE_SIMPLE); // changed this to simple
-	cam.initGrabber(640, 480); // note: how to change aspect ratio
+	cam.initGrabber(640, 480); // note: inquire about changing aspect ratio
     
     ofSetFrameRate(30);
     
@@ -43,8 +48,8 @@ void testApp::setup() {
     appState = 1;
     
     pushTime = 0;
-    measuring = false;
-    firstMeasure = true;
+    measuring = false; // whether calculating steadiness
+    firstMeasure = true; // for displaying bullets
     
     pushToAim.buttonOff.loadImage("aimButtonOpen.png");
     pushToAim.buttonOn.loadImage("aimButtonPushed.png");
@@ -86,24 +91,31 @@ void testApp::update() {
 //-------------------------------------------------------------------
 
 void testApp::draw() {
-    cam.draw(0,0);
+    cam.draw(-cam.width*0.25,0);
     // appState 1: Measuring shakiness of aim
     if(appState == 1){
         // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
         pushToAim.display();
         if(!measuring){
-            // faceOutline.draw();
+            ofPushMatrix();
+            ofTranslate(-cam.width*0.25, 0);
             ofRect(faceRect);
-            // ofCircle(faceCenter.x, faceCenter.y, 10);
+            ofPopMatrix();
+            ofSetColor(0);
+            helvetica.drawStringCentered("Push the button.", ofGetWidth()*0.5 - 1, 11);
+            helvetica.drawStringCentered("The steadiness of your aim will", ofGetWidth()*0.5 - 1, 31);
+            helvetica.drawStringCentered("be measured for three seconds.", ofGetWidth()*0.5 - 1, 51);
+            ofSetColor(255);
             helvetica.drawStringCentered("Push the button.", ofGetWidth()*0.5, 10);
             helvetica.drawStringCentered("The steadiness of your aim will", ofGetWidth()*0.5, 30);
             helvetica.drawStringCentered("be measured for three seconds.", ofGetWidth()*0.5, 50);
-            
         }
         
         if(measuring){
+            ofPushMatrix();
+            ofTranslate(-cam.width*0.25, 0);
             target.draw(faceCenter.x-targetW*0.5, faceCenter.y-targetH*0.5, targetW, targetW);
-            // ofCircle(pushToAim.xPos, pushToAim.yPos, 10);
+            ofPopMatrix();
         }
         collectPoints();
         measureAim();
@@ -113,8 +125,13 @@ void testApp::draw() {
     // appState 2: reporting results
     if(appState == 2){
         recommendation = "Bullets recommended: " + ofToString(numBullets);
+        ofSetColor(0);
+        helvetica.drawStringCentered(recommendation, ofGetWidth() * 0.5-1, 51);
+        helvetica.drawStringCentered("Click anywhere to test again.", ofGetWidth() * 0.5 - 1, 81);
+        ofSetColor(255);
         helvetica.drawStringCentered(recommendation, ofGetWidth() * 0.5, 50);
-        helvetica.drawStringCentered("Click anywhere to test again:", ofGetWidth() * 0.5, 80);
+        helvetica.drawStringCentered("Click anywhere to test again.", ofGetWidth() * 0.5, 80);
+
         if(firstMeasure){
             for (int i = 0; i < numBullets; i++){
                 magazine.push_back(bullet);
@@ -138,26 +155,13 @@ void testApp::draw() {
             if(i >= 20 && i < 25){
                 magazine[i].draw(ofGetWidth() - 250, ofGetHeight() - 18 - ((i-20) * 18));
             }
-            if(i >= 25 && i < 30){
+            if(i >= 25){
                 magazine[i].draw(ofGetWidth() - 300, ofGetHeight() - 18 - ((i-25) * 18));
-            }
-            if(i >= 30 && i < 35){
-                magazine[i].draw(ofGetWidth() - 350, ofGetHeight() - 18 - ((i-30) * 18));
-            }
-            if(i >= 35){
-                magazine[i].draw(ofGetWidth() - 400, ofGetHeight() - 18 - ((i-35) * 18));
             }
         }
     }
 }
 
-//-------------------------------------------------------------------
-
-void testApp::keyPressed(int key) {
-	if(key == 'r') {
-		tracker.reset();
-	}
-}
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
@@ -178,6 +182,7 @@ void testApp::mousePressed(int x, int y, int button){
     if(appState == 2){
         magazine.erase(magazine.begin(), magazine.end());
         firstMeasure = true;
+        tracker.reset();
         appState = 1;
     }
 }
@@ -214,6 +219,9 @@ void testApp::measureAim(){
         avgDist /= targetX.size()-1;
         
         numBullets = (int)MAX(1, avgDist); // make sure it recommends at least one bullet
+        numBullets = MIN(numBullets, 30); // recommending more than 30 is just silly
+        // (according to Wikipedia, six states limit magazine capacity, ranging from 7 to 20 rounds)
+        // see here: http://en.wikipedia.org/wiki/Magazine_(firearms)
         
         // debugging
         cout << "average distance = " << avgDist << endl;

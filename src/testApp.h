@@ -22,7 +22,6 @@ public:
 	void setup();
 	void update();
 	void draw();
-	void keyPressed(int key);
     void mousePressed(int x, int y, int button);
     
     // font
@@ -32,7 +31,7 @@ public:
 	ofVideoGrabber cam;
 	ofxFaceTracker tracker;
     
-    // variables created by faceTracker
+    // variables generated from info collected by the faceTracker
     ofPolyline faceOutline;
     ofRectangle faceRect;
     ofPoint faceCenter;

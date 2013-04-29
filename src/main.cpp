@@ -3,6 +3,6 @@
 
 int main() {
 	ofAppGlutWindow window;
-	ofSetupOpenGL(&window, 640, 480, OF_WINDOW); // changed this, too
+	ofSetupOpenGL(&window, 320, 480, OF_WINDOW); // changed this to match iPhone resolution
 	ofRunApp(new testApp());
 }

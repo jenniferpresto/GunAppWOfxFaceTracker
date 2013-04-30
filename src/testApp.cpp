@@ -49,7 +49,6 @@ void testApp::setup() {
     
     pushTime = 0;
     measuring = false; // whether calculating steadiness
-    firstMeasure = true; // for displaying bullets
     
     pushToAim.buttonOff.loadImage("aimButtonOpen.png");
     pushToAim.buttonOn.loadImage("aimButtonPushed.png");
@@ -132,31 +131,25 @@ void testApp::draw() {
         helvetica.drawStringCentered(recommendation, ofGetWidth() * 0.5, 50);
         helvetica.drawStringCentered("Click anywhere to test again.", ofGetWidth() * 0.5, 80);
 
-        if(firstMeasure){
-            for (int i = 0; i < numBullets; i++){
-                magazine.push_back(bullet);
-                firstMeasure = false;
-            }
-        }
         
-        for (int i = 0; i < magazine.size(); i++){
+        for (int i = 0; i < numBullets; i++){
             if(i<5){
-                magazine[i].draw(ofGetWidth() - 50, ofGetHeight() - 18 - (i * 18));
+                bullet.draw(ofGetWidth() - 60, ofGetHeight() - 18 - (i * 18));
             }
             if(i >= 5 && i < 10){
-                magazine[i].draw(ofGetWidth() - 100, ofGetHeight() - 18 - ((i-5) * 18));
+                bullet.draw(ofGetWidth() - 110, ofGetHeight() - 18 - ((i-5) * 18));
             }
             if(i >= 10 && i < 15){
-                magazine[i].draw(ofGetWidth() - 150, ofGetHeight() - 18 - ((i-10) * 18));
+                bullet.draw(ofGetWidth() - 160, ofGetHeight() - 18 - ((i-10) * 18));
             }
             if(i >= 15 && i < 20){
-                magazine[i].draw(ofGetWidth() - 200, ofGetHeight() - 18 - ((i-15) * 18));
+                bullet.draw(ofGetWidth() - 210, ofGetHeight() - 18 - ((i-15) * 18));
             }
             if(i >= 20 && i < 25){
-                magazine[i].draw(ofGetWidth() - 250, ofGetHeight() - 18 - ((i-20) * 18));
+                bullet.draw(ofGetWidth() - 260, ofGetHeight() - 18 - ((i-20) * 18));
             }
             if(i >= 25){
-                magazine[i].draw(ofGetWidth() - 300, ofGetHeight() - 18 - ((i-25) * 18));
+                bullet.draw(ofGetWidth() - 310, ofGetHeight() - 18 - ((i-25) * 18));
             }
         }
     }
@@ -180,11 +173,14 @@ void testApp::mousePressed(int x, int y, int button){
     }
     
     if(appState == 2){
-        magazine.erase(magazine.begin(), magazine.end());
-        firstMeasure = true;
         tracker.reset();
         appState = 1;
     }
+}
+
+//--------------------------------------------------------------
+int testApp::round(float number){
+    return number < 0.0 ? ceil(number - 0.5) : floor(number + 0.5);
 }
 
 //--------------------------------------------------------------
@@ -216,9 +212,10 @@ void testApp::measureAim(){
         cout << "total distance = " << avgDist << endl;
         cout << "number of points calculated = " << targetX.size() << endl;
         
-        avgDist /= targetX.size()-1;
+        avgDist /= (targetX.size()-1);
+        int roundedAvg = round(avgDist);
         
-        numBullets = (int)MAX(1, avgDist); // make sure it recommends at least one bullet
+        numBullets = MAX(1, roundedAvg); // make sure it recommends at least one bullet
         numBullets = MIN(numBullets, 30); // recommending more than 30 is just silly
         // (according to Wikipedia, six states limit magazine capacity, ranging from 7 to 20 rounds)
         // see here: http://en.wikipedia.org/wiki/Magazine_(firearms)

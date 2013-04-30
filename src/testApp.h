@@ -39,7 +39,6 @@ public:
     // variables controlling on-screen target and bullets
     ofImage target;
     ofImage bullet;
-    vector<ofImage> magazine;
     float targetW;
     float targetH;
     
@@ -50,6 +49,7 @@ public:
     aimButton pushToAim;
     
     // variables regarding actual measurement
+    int round(float number);
     void collectPoints();
     bool measuring;
     bool calculating;
@@ -59,5 +59,4 @@ public:
     vector<float> targetY; // all target y-positions during the measured time
     int numBullets;
     string recommendation;
-    bool firstMeasure;
 };

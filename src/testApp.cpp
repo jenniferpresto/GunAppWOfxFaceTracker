@@ -16,6 +16,9 @@
  available here:
  https://github.com/armadillu/ofxCenteredTrueTypeFont
  
+ Bullet images by The Noun Project Collection; target adapted from
+ design by Laurent Patain from The Noun Project.
+ 
  */
 
 #include "testApp.h"
@@ -34,6 +37,8 @@ void testApp::setup() {
     ofEnableAlphaBlending(); // to maintain target transparency
     
     helvetica.loadFont("helvetica.otf", 12);
+    
+    titlePage.loadImage("iAmmoTitlePage.jpg");
 	
 	tracker.setup();
 	tracker.setRescale(.5);
@@ -45,7 +50,7 @@ void testApp::setup() {
     target.loadImage("target.png");
     bullet.loadImage("bullet.png");
     
-    appState = 1;
+    appState = 0;
     
     pushTime = 0;
     measuring = false; // whether calculating steadiness
@@ -91,6 +96,11 @@ void testApp::update() {
 
 void testApp::draw() {
     cam.draw(-cam.width*0.25,0);
+    // appState 0: Title page
+    if(appState == 0){
+        titlePage.draw(0, 0, 320, 480);
+    }
+    
     // appState 1: Measuring shakiness of aim
     if(appState == 1){
         // ofDrawBitmapString(ofToString((int) ofGetFrameRate()), 10, 20);
@@ -158,6 +168,10 @@ void testApp::draw() {
 
 //--------------------------------------------------------------
 void testApp::mousePressed(int x, int y, int button){
+    if (appState == 0) {
+        appState = 1;
+    }
+    
     if (appState == 1){
         if(x > pushToAim.xPos - pushToAim.w * 0.5 && x < pushToAim.xPos + pushToAim.w * 0.5 && y > pushToAim.yPos - pushToAim.h * 0.5 && y < pushToAim.yPos + pushToAim.h * 0.5){
             pushToAim.pushed = true;

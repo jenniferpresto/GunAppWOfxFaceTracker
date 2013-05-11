@@ -26,6 +26,9 @@ public:
     
     // font
     ofxCenteredTrueTypeFont helvetica;
+    
+    // title page
+    ofImage titlePage;
 
 	// variables for cam and faceTracker
 	ofVideoGrabber cam;
